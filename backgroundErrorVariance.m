@@ -13,7 +13,7 @@ function[sb2] = backgroundErrorVariance( D, Ye, Yf )
 %
 % ----- Outputs -----
 %
-% sb2: Background error variance (nTime x 1)
+% sb2: Diagnosed background error variance (nTime x 1)
 
 % Desroziers is for classical (non-ensemble) systems. Use the proxy means
 Ye = mean( Ye, 2 );
