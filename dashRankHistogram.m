@@ -25,8 +25,8 @@ bins = zeros( nBins, 1 );
 
 % For each site, generate the proxy estimates
 for s = 1:nSite
-%     Mpsm = M( F{s}.H, : );
-%     Ye = F{s}.runForwardModel( Mpsm, NaN, NaN );
+    Mpsm = M( F{s}.H, : );
+    Ye = F{s}.runForwardModel( Mpsm, NaN, NaN );
     
     % Sort the ensemble of estimates, set Inf as an upper bound
     Ye = [sort(Ye), Inf];
