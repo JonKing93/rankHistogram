@@ -1,11 +1,15 @@
-function[Yf] = modelEstimates( A, F )
+function[Yf] = modelEstimates( A, F, sites )
 % Generates model estimates from a DA posterior.
 %
 % Ye = modelEstimates( M, F )
 % Generates estimates for a model prior
 %
 % Yf = modelEstimates( A, F )
-% Generates estimates for a model posterior.
+% Generates estimates for all proxies a model posterior.
+%
+% Yf = modelEstimates( A, F, sites )
+% Uses a model posterior to generate estimates for the proxies used to
+% update each time step.
 %
 % ----- Inputs -----
 %
@@ -14,6 +18,9 @@ function[Yf] = modelEstimates( A, F )
 % A: A model posterior (nState x nEns x nTime)
 %
 % F: A cell vector of PSM objects.
+%
+% sites: A logical matrix indicating which sites were used in each time
+%        step (nSite x nTime)   (This is an output from the dash kalman filter)
 %
 % ----- Outputs -----
 %
@@ -26,11 +33,18 @@ function[Yf] = modelEstimates( A, F )
 nSite = size(F);
 Yf = NaN( nSite, nEns, nTime );
 
+% Default sites
+if ~exist('sites','var') || isempty(sites)
+    sites = true( nSite, nTime );
+end
+
 % Get estimates for each site in each time step
-for s = 1:nSite
-    Apsm = A( F{s}.H, :, : );
-    for t = 1:nTime     
-        Yf(s,:,t) = F{s}.runForwardModel( Apsm, NaN, NaN );
+for t = 1:nTime
+    for s = 1:nSite
+        if sites(s,t)
+            Apsm = A(F{s}.H, :, t);
+            Yf(s,:,t) = F{s}.runForwardModel( Apsm, NaN, NaN );
+        end
     end
 end
 
