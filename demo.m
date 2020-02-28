@@ -12,9 +12,11 @@ Yvar = var( Ye, [], 2 );
 
 % Compute metrics for one site
 s = 1;
+
 histBincounts = rankHistogram( Ye(s,:), D(s,:) );
 sb2 = backgroundErrorVariance( D(s,:), Ye(s,:), Yf(s,:,:) );
 so2 = observationErrorVariance( D(s,:), Ye(s,:), Yf(s,:,:) );
+
 Rsite = R(s,:);
 Yvar_site = Yvar(s) * ones(size(Rsite));
 
