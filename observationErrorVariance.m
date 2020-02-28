@@ -17,7 +17,8 @@ function[so2] = observationErrorVariance( D, Ye, Yf )
 
 % Desroziers is for classical (non-ensemble) systems. Use the proxy means
 Ye = mean( Ye, 2 );
-Yf = squeeze( mean(Yf, 2) );
+Yf = mean(Yf, 2);
+Yf = permute( Yf, [1 3 2] );
 
 % Do the calculation in each time step for each observation
 nObs = sum( ~isnan(D), 1 );
