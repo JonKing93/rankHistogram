@@ -1,29 +1,35 @@
 % Demo for suggested use.
 
-% Observations and observation error (I'm assuming these already exist)
-D;
-R;
-
 % Get the prior and posterior estimates
 Ye = modelEstimates( M, F );
 Yf = modelEstimates( A, F );
 
-% Compute metrics
-histBincounts = rankHistogram( Ye, D );
-sb2 = backgroundErrorVariance( D, Ye, Yf );
-so2 = observationErrorVariance( D, Ye, Yf );
-Eb = 
+% Observations, observation error variance, background error variance
+% (I'm assuming R and D exist)
+D;   % (nSite x nTime)
+R;   % (nSite x nTime)
+Yvar = var( Ye, [], 2 );
+
+% Compute metrics for one site
+s = 1;
+histBincounts = rankHistogram( Ye(s,:), D(s,:) );
+sb2 = backgroundErrorVariance( D(s,:), Ye(s,:), Yf(s,:,:) );
+so2 = observationErrorVariance( D(s,:), Ye(s,:), Yf(s,:,:) );
+Rsite = R(s,:);
+Yvar_site = Yvar(s) * ones(size(Rsite));
 
 % Plot rank histogram
 figure
 plot( histBincounts );
 title('Rank Histogram');
 
-% Plot diagnosed error variances
+% Compare error variances
 figure
 time = 1:nTime;
-plot( time, sb2 );
+plot( time, sb2, 'b' );
 hold on
-plot( time, so2 );
-title('Diagnosed error variance');
-legend('Background','Observation');
+plot( time, Yvar_site, 'b:' );
+plot( time, so2, 'k' );
+plot( time, Rsite, 'k:' );
+legend('Diagnosed background error','Used background error','Diagnosed observation error', 'Used observation error');
+title('Error variance comparison');
